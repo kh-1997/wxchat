@@ -36,12 +36,12 @@ func CounterHandler(w http.ResponseWriter, r *http.Request) {
 	res := &JsonResult{}
 
 	if r.Method == http.MethodGet {
-		counter, err := getCurrentCounter()
+		counter, err := getCounter(r)
 		if err != nil {
 			res.Code = -1
 			res.ErrorMsg = err.Error()
 		} else {
-			res.Data = counter.Count
+			res.Data = counter
 		}
 	} else if r.Method == http.MethodPost {
 		count, err := modifyCounter(r)
@@ -66,6 +66,28 @@ func CounterHandler(w http.ResponseWriter, r *http.Request) {
 }
 
 // modifyCounter 更新计数，自增或者清零
+func getCounter(r *http.Request) ([]model.CounterModel, error) {
+	maps, err := getAction(r)
+	if err != nil {
+		return nil, err
+	}
+	action := maps["action"]
+	log.Printf("maps = %s",maps)
+	var count []model.CounterModel
+	if action == "get" {
+		count, err = getCurrentOrder(maps["name"])
+		if err != nil {
+			return nil, err
+		}
+	} else {
+		err = fmt.Errorf("参数 action : %s 错误", action)
+	}
+
+	return count, err
+}
+
+
+// modifyCounter 更新计数，自增或者清零
 func modifyCounter(r *http.Request) (int32, error) {
 	maps, err := getAction(r)
 	if err != nil {
@@ -79,8 +101,7 @@ func modifyCounter(r *http.Request) (int32, error) {
 		if err != nil {
 			return 0, err
 		}
-	}
-	if action == "inc" {
+	} else if action == "inc" {
 		count, err = upsertCounter(r)
 		if err != nil {
 			return 0, err
@@ -138,10 +159,7 @@ func addCounter(r *http.Request,user string,product string,order string) (int32,
 	}
 	log.Printf("maps = %s",counter)
 	err := dao.Imp.InsertCounter(counter)
-	if err != nil {
-		log.Printf("InsertCounter err = %s",err)
-		return 0, err
-	}
+	log.Printf("InsertCounter err = %s",err)
 	return counter.Count, nil
 }
 
@@ -166,7 +184,6 @@ func getCurrentOrder(name string) ([]model.CounterModel, error) {
 	if err != nil {
 		return nil, err
 	}
-
 	return counter, nil
 }
 
