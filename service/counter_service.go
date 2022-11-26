@@ -199,7 +199,7 @@ func getAction(r *http.Request) (string, error) {
 	if err := decoder.Decode(&body); err != nil {
 		return "", err
 	}
-	defer r.Body.Close()
+	//defer r.Body.Close()
 
 	action, ok := body["action"]
 
