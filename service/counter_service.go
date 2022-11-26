@@ -4,6 +4,7 @@ import (
 	"encoding/json"
 	"fmt"
 	"io/ioutil"
+	"log"
 	"net/http"
 	"time"
 
@@ -43,26 +44,12 @@ func CounterHandler(w http.ResponseWriter, r *http.Request) {
 			res.Data = counter.Count
 		}
 	} else if r.Method == http.MethodPost {
-		action, err := getAction(r)
+		count, err := modifyCounter(r)
 		if err != nil {
-			return
-		}
-		if action == "getorder"{
-			count, err := getOrder(r)
-			if err != nil {
-				res.Code = -1
-				res.ErrorMsg = err.Error()
-			} else {
-				res.Data = count
-			}
+			res.Code = -1
+			res.ErrorMsg = err.Error()
 		} else {
-			count, err := modifyCounter(r)
-			if err != nil {
-				res.Code = -1
-				res.ErrorMsg = err.Error()
-			} else {
-				res.Data = count
-			}
+			res.Data = count
 		}
 	} else {
 		res.Code = -1
@@ -80,14 +67,15 @@ func CounterHandler(w http.ResponseWriter, r *http.Request) {
 
 // modifyCounter 更新计数，自增或者清零
 func modifyCounter(r *http.Request) (int32, error) {
-	action, err := getAction(r)
+	maps, err := getAction(r)
 	if err != nil {
 		return 0, err
 	}
-
+    action := maps["action"]
+	log.Printf("maps = %s",maps)
 	var count int32
 	if action == "add" {
-		count, err = addCounter(r)
+		count, err = addCounter(r,maps["user"],maps["product"],maps["order"])
 		if err != nil {
 			return 0, err
 		}
@@ -139,26 +127,12 @@ func upsertCounter(r *http.Request) (int32, error) {
 }
 
 // upsertCounter 更新或修改计数器
-func addCounter(r *http.Request) (int32, error) {
-	decoder := json.NewDecoder(r.Body)
-	body := make(map[string]interface{})
-	if err := decoder.Decode(&body); err != nil {
-		return 0, err
-	}
-	defer r.Body.Close()
-
-	user, ok := body["user"]
-	product, ok := body["product"]
-	order, ok := body["order"]
-	if !ok {
-		return 0, fmt.Errorf("缺少 action 参数")
-	}
-
+func addCounter(r *http.Request,user string,product string,order string) (int32, error) {
 	counter := &model.CounterModel{
 		UpdatedAt: time.Now(),
-		Product: product.(string),
-		Order: order.(string),
-		User: user.(string),
+		Product: product,
+		Order: order,
+		User: user,
 	}
 	err := dao.Imp.UpsertCounter(counter)
 	if err != nil {
@@ -193,54 +167,35 @@ func getCurrentOrder(name string) ([]model.CounterModel, error) {
 }
 
 // getAction 获取action
-func getAction(r *http.Request) (string, error) {
+func getAction(r *http.Request) (map[string]string,error) {
 	decoder := json.NewDecoder(r.Body)
 	body := make(map[string]interface{})
 	if err := decoder.Decode(&body); err != nil {
-		return "", err
+		return nil, err
 	}
-	//defer r.Body.Close()
-
+	defer r.Body.Close()
+	maps := make(map[string]string)
 	action, ok := body["action"]
 
 	if !ok {
-		return "", fmt.Errorf("缺少 action 参数")
+		return nil, fmt.Errorf("缺少 action 参数")
 	}
-
-	return action.(string), nil
-}
-
-func getUser(r *http.Request) (string, error) {
-	decoder := json.NewDecoder(r.Body)
-	body := make(map[string]interface{})
-	if err := decoder.Decode(&body); err != nil {
-		return "", err
-	}
-	defer r.Body.Close()
-
+	maps["action"] = action.(string)
 	user, ok := body["user"]
-	if !ok {
-		return "", fmt.Errorf("缺少 action 参数")
+	if ok {
+		maps["user"] = user.(string)
 	}
-
-	return  user.(string),nil
-}
-
-func getProduct(r *http.Request) (string, error) {
-	decoder := json.NewDecoder(r.Body)
-	body := make(map[string]interface{})
-	if err := decoder.Decode(&body); err != nil {
-		return "", err
-	}
-	defer r.Body.Close()
-
 	product, ok := body["product"]
-	if !ok {
-		return "",fmt.Errorf("缺少 action 参数")
+	if ok {
+		maps["product"] = product.(string)
 	}
-
-	return product.(string),nil
+	order, ok := body["order"]
+	if ok {
+		maps["order"] = order.(string)
+	}
+	return maps, nil
 }
+
 
 func getOrder(r *http.Request) (string, error) {
 	decoder := json.NewDecoder(r.Body)
