@@ -8,6 +8,7 @@ import (
 type CounterInterface interface {
 	GetCounter(id int32) (*model.CounterModel, error)
 	UpsertCounter(counter *model.CounterModel) error
+	InsertCounter(counter *model.CounterModel) error
 	ClearCounter(id int32) error
 	GetOrder(name string) ([]model.CounterModel, error)
 }

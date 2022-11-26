@@ -129,12 +129,14 @@ func upsertCounter(r *http.Request) (int32, error) {
 // upsertCounter 更新或修改计数器
 func addCounter(r *http.Request,user string,product string,order string) (int32, error) {
 	counter := &model.CounterModel{
+		Count: 3,
+		CreatedAt: time.Now(),
 		UpdatedAt: time.Now(),
 		Product: product,
 		Order: order,
 		User: user,
 	}
-	err := dao.Imp.UpsertCounter(counter)
+	err := dao.Imp.InsertCounter(counter)
 	if err != nil {
 		return 0, err
 	}
@@ -176,7 +178,6 @@ func getAction(r *http.Request) (map[string]string,error) {
 	defer r.Body.Close()
 	maps := make(map[string]string)
 	action, ok := body["action"]
-
 	if !ok {
 		return nil, fmt.Errorf("缺少 action 参数")
 	}

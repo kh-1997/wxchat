@@ -19,6 +19,12 @@ func (imp *CounterInterfaceImp) UpsertCounter(counter *model.CounterModel) error
 	return cli.Table(tableName).Save(counter).Error
 }
 
+// UpsertCounter 更新/写入counter
+func (imp *CounterInterfaceImp) InsertCounter(counter *model.CounterModel) error {
+	cli := db.Get()
+	return cli.Table(tableName).Create(counter).Error
+}
+
 // GetCounter 查询Counter
 func (imp *CounterInterfaceImp) GetCounter(id int32) (*model.CounterModel, error) {
 	var err error
