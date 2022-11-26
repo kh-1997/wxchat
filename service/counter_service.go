@@ -136,8 +136,10 @@ func addCounter(r *http.Request,user string,product string,order string) (int32,
 		Order: order,
 		User: user,
 	}
+	log.Printf("maps = %s",counter)
 	err := dao.Imp.InsertCounter(counter)
 	if err != nil {
+		log.Printf("InsertCounter err = %s",err)
 		return 0, err
 	}
 	return counter.Count, nil
