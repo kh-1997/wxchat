@@ -6,6 +6,7 @@ import (
 	"io/ioutil"
 	"log"
 	"net/http"
+	"strconv"
 	"time"
 
 	"wxcloudrun-golang/db/dao"
@@ -102,7 +103,7 @@ func modifyCounter(r *http.Request,maps map[string]string) (int32, error) {
 	var err error
 	var count int32
 	if action == "add" {
-		count, err = addCounter(r,maps["user"],maps["product"],maps["order"])
+		count, err = addCounter(r,maps)
 		if err != nil {
 			return 0, err
 		}
@@ -153,7 +154,15 @@ func upsertCounter(r *http.Request) (int32, error) {
 }
 
 // upsertCounter 更新或修改计数器
-func addCounter(r *http.Request,user string,product string,order string) (int32, error) {
+func addCounter(r *http.Request,maps map[string]string) (int32, error) {
+	product := maps["product"]
+	order := maps["order"]
+	user := maps["user"]
+	price := maps["price"]
+	primary := maps["primary_image"]
+	thumb := maps["thumb"]
+	title := maps["title"]
+	prices,_:= strconv.ParseInt(price,10,64)
 	counter := &model.CounterModel{
 		Count: 3,
 		CreatedAt: time.Now(),
@@ -161,6 +170,10 @@ func addCounter(r *http.Request,user string,product string,order string) (int32,
 		Product: product,
 		Order: order,
 		User: user,
+		Price: int(prices),
+		PrimaryImage: primary,
+		Thumb: thumb,
+		Title: title,
 	}
 	log.Printf("maps = %s",counter)
 	err := dao.Imp.InsertCounter(counter)
@@ -217,6 +230,22 @@ func getAction(r *http.Request) (map[string]string,error) {
 	order, ok := body["order"]
 	if ok {
 		maps["order"] = order.(string)
+	}
+	title, ok := body["title"]
+	if ok {
+		maps["title"] = title.(string)
+	}
+	price, ok := body["price"]
+	if ok {
+		maps["price"] = price.(string)
+	}
+	primaryImage, ok := body["primary_image"]
+	if ok {
+		maps["primary_image"] = primaryImage.(string)
+	}
+	thumb, ok := body["thumb"]
+	if ok {
+		maps["thumb"] = thumb.(string)
 	}
 	return maps, nil
 }
