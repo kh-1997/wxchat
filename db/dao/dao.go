@@ -42,7 +42,7 @@ func (imp *CounterInterfaceImp) GetOrder(name string) ([]model.CounterModel, err
 	var counter []model.CounterModel
 
 	cli := db.Get()
-	err = cli.Table(tableName).Where("user = ?", name).Find(counter).Error
+	err = cli.Table(tableName).Where("user = ?", name).Find(&counter).Error
 
 	return counter, err
 }
