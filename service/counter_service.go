@@ -247,6 +247,7 @@ func getAction(r *http.Request) (map[string]string,error) {
 	if ok {
 		maps["thumb"] = thumb.(string)
 	}
+
 	return maps, nil
 }
 
