@@ -79,12 +79,12 @@ func CounterHandler(w http.ResponseWriter, r *http.Request) {
 // modifyCounter 更新计数，自增或者清零
 func getCounter(r *http.Request,maps map[string]string) ([]model.CounterModel, error) {
 	action := maps["action"]
-	name := maps["name"]
-	log.Printf("action = %s,name=%s",action,name)
+	user := maps["user"]
+	log.Printf("action = %s,user=%s",action,user)
 	var count []model.CounterModel
 	var err error
 	if action == "get" {
-		count, err = getCurrentOrder(name)
+		count, err = getCurrentOrder(user)
 		if err != nil {
 			return nil, err
 		}
