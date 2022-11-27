@@ -36,21 +36,32 @@ func CounterHandler(w http.ResponseWriter, r *http.Request) {
 	res := &JsonResult{}
 
 	if r.Method == http.MethodGet {
-		counter, err := getCounter(r)
-		if err != nil {
-			res.Code = -1
-			res.ErrorMsg = err.Error()
-		} else {
-			res.Data = counter
-		}
+
 	} else if r.Method == http.MethodPost {
-		count, err := modifyCounter(r)
+		maps, err := getAction(r)
+		log.Printf("maps = %s",maps)
 		if err != nil {
-			res.Code = -1
-			res.ErrorMsg = err.Error()
-		} else {
-			res.Data = count
+			return
 		}
+		action := maps["action"]
+		if action == "get" {
+			count, err := getCounter(r,maps)
+			if err != nil {
+				res.Code = -1
+				res.ErrorMsg = err.Error()
+			} else {
+				res.Data = count
+			}
+		} else {
+			count, err := modifyCounter(r,maps)
+			if err != nil {
+				res.Code = -1
+				res.ErrorMsg = err.Error()
+			} else {
+				res.Data = count
+			}
+		}
+
 	} else {
 		res.Code = -1
 		res.ErrorMsg = fmt.Sprintf("请求方法 %s 不支持", r.Method)
@@ -66,9 +77,9 @@ func CounterHandler(w http.ResponseWriter, r *http.Request) {
 }
 
 // modifyCounter 更新计数，自增或者清零
-func getCounter(r *http.Request) ([]model.CounterModel, error) {
-	action := r.FormValue("action")
-	name := r.FormValue("name")
+func getCounter(r *http.Request,maps map[string]string) ([]model.CounterModel, error) {
+	action := maps["action"]
+	name := maps["name"]
 	log.Printf("action = %s,name=%s",action,name)
 	var count []model.CounterModel
 	var err error
@@ -86,13 +97,9 @@ func getCounter(r *http.Request) ([]model.CounterModel, error) {
 
 
 // modifyCounter 更新计数，自增或者清零
-func modifyCounter(r *http.Request) (int32, error) {
-	maps, err := getAction(r)
-	if err != nil {
-		return 0, err
-	}
-    action := maps["action"]
-	log.Printf("maps = %s",maps)
+func modifyCounter(r *http.Request,maps map[string]string) (int32, error) {
+	action := maps["action"]
+	var err error
 	var count int32
 	if action == "add" {
 		count, err = addCounter(r,maps["user"],maps["product"],maps["order"])
