@@ -13,6 +13,6 @@ type CounterModel struct {
 	Order        string    `gorm:"column:order" json:"order"`
 	Title        string    `gorm:"column:title" json:"title"`
 	Thumb        string    `gorm:"column:thumb" json:"thumb"`
-	PrimaryImage string    `gorm:"column:primary_image" json:"primary_image"`
+	Primary      string    `gorm:"column:primary" json:"primary"`
 	Price        int       `gorm:"column:price" json:"price"`
 }

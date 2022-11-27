@@ -159,7 +159,7 @@ func addCounter(r *http.Request,maps map[string]string) (int32, error) {
 	order := maps["order"]
 	user := maps["user"]
 	price := maps["price"]
-	primary := maps["primary_image"]
+	primary := maps["primary"]
 	thumb := maps["thumb"]
 	title := maps["title"]
 	prices,_:= strconv.ParseInt(price,10,64)
@@ -171,7 +171,7 @@ func addCounter(r *http.Request,maps map[string]string) (int32, error) {
 		Order: order,
 		User: user,
 		Price: int(prices),
-		PrimaryImage: primary,
+		Primary: primary,
 		Thumb: thumb,
 		Title: title,
 	}
