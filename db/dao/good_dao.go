@@ -13,7 +13,7 @@ func (imp *GoodInterfaceImp) GetGoodByName(name string) (*model.GoodModel, error
 	var counter = new(model.GoodModel)
 
 	cli := db.Get()
-	err = cli.Table(tableGoodName).Where("name like ?", "").First(counter).Error
+	err = cli.Table(tableGoodName).Where("name like ?", "%"+name+"%").First(counter).Error
 
 	return counter, err
 }
@@ -24,7 +24,7 @@ func (imp *GoodInterfaceImp) GetAllGood() ([]model.GoodModel, error) {
 	var counter []model.GoodModel
 
 	cli := db.Get()
-	err = cli.Table(tableName).Find(&counter).Error
+	err = cli.Table(tableGoodName).Find(&counter).Error
 
 	return counter, err
 }
