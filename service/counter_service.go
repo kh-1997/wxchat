@@ -67,15 +67,13 @@ func CounterHandler(w http.ResponseWriter, r *http.Request) {
 
 // modifyCounter 更新计数，自增或者清零
 func getCounter(r *http.Request) ([]model.CounterModel, error) {
-	maps, err := getAction(r)
-	if err != nil {
-		return nil, err
-	}
-	action := maps["action"]
-	log.Printf("maps = %s",maps)
+	action := r.FormValue("action")
+	name := r.FormValue("name")
+	log.Printf("action = %s,name=%s",action,name)
 	var count []model.CounterModel
+	var err error
 	if action == "get" {
-		count, err = getCurrentOrder(maps["name"])
+		count, err = getCurrentOrder(name)
 		if err != nil {
 			return nil, err
 		}
@@ -214,23 +212,6 @@ func getAction(r *http.Request) (map[string]string,error) {
 		maps["order"] = order.(string)
 	}
 	return maps, nil
-}
-
-
-func getOrder(r *http.Request) (string, error) {
-	decoder := json.NewDecoder(r.Body)
-	body := make(map[string]interface{})
-	if err := decoder.Decode(&body); err != nil {
-		return "", err
-	}
-	defer r.Body.Close()
-
-	order, ok := body["order"]
-	if !ok {
-		return "",fmt.Errorf("缺少 action 参数")
-	}
-
-	return order.(string),nil
 }
 
 // getIndex 获取主页
