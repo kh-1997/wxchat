@@ -239,9 +239,9 @@ func getAction(r *http.Request) (map[string]string,error) {
 	if ok {
 		maps["price"] = price.(string)
 	}
-	primaryImage, ok := body["primary_image"]
+	primaryImage, ok := body["primary"]
 	if ok {
-		maps["primary_image"] = primaryImage.(string)
+		maps["primary"] = primaryImage.(string)
 	}
 	thumb, ok := body["thumb"]
 	if ok {
