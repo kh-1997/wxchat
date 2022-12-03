@@ -53,6 +53,14 @@ func CounterHandler(w http.ResponseWriter, r *http.Request) {
 			} else {
 				res.Data = count
 			}
+		} else if action == "cloud" {
+			count, err := getCloud(r,maps)
+			if err != nil {
+				res.Code = -1
+				res.ErrorMsg = err.Error()
+			} else {
+				res.Data = count
+			}
 		} else {
 			count, err := modifyCounter(r,maps)
 			if err != nil {
@@ -96,6 +104,24 @@ func getCounter(r *http.Request,maps map[string]string) ([]model.CounterModel, e
 	return count, err
 }
 
+// modifyCounter 更新计数，自增或者清零
+func getCloud(r *http.Request,maps map[string]string) ([]model.CounterModel, error) {
+	action := maps["action"]
+	user := maps["user"]
+	log.Printf("action = %s,user=%s",action,user)
+	var count []model.CounterModel
+	var err error
+	if action == "get" {
+		count, err = getCurrentOrder(user)
+		if err != nil {
+			return nil, err
+		}
+	} else {
+		err = fmt.Errorf("参数 action : %s 错误", action)
+	}
+
+	return count, err
+}
 
 // modifyCounter 更新计数，自增或者清零
 func modifyCounter(r *http.Request,maps map[string]string) (int32, error) {
@@ -247,7 +273,10 @@ func getAction(r *http.Request) (map[string]string,error) {
 	if ok {
 		maps["thumb"] = thumb.(string)
 	}
-
+	cloud, ok := body["cloud"]
+	if ok {
+		maps["cloud"] = cloud.(string)
+	}
 	return maps, nil
 }
 
