@@ -263,9 +263,9 @@ func getAction(r *http.Request) (map[string]string,error) {
 	if ok {
 		maps["product"] = product.(string)
 	}
-	order, ok := body["order"]
+	trade, ok := body["trade"]
 	if ok {
-		maps["order"] = order.(string)
+		maps["trade"] = trade.(string)
 	}
 	title, ok := body["title"]
 	if ok {
