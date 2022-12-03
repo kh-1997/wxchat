@@ -53,7 +53,7 @@ func (imp *CounterInterfaceImp) GetOrderById(order string) (model.CounterModel, 
 	var counter model.CounterModel
 
 	cli := db.Get()
-	err = cli.Table(tableName).Where("order = ?", order).Find(&counter).Error
+	err = cli.Table(tableName).Where("order = ?", order).First(&counter).Error
 
 	return counter, err
 }
