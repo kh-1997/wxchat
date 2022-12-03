@@ -10,7 +10,7 @@ type CounterModel struct {
 	UpdatedAt    time.Time `gorm:"column:updatedAt" json:"updatedAt"`
 	User         string    `gorm:"column:user" json:"user"`
 	Product      string    `gorm:"column:product" json:"product"`
-	Order        string    `gorm:"column:order" json:"order"`
+	Trade       string     `gorm:"column:trade" json:"trade"`
 	Title        string    `gorm:"column:title" json:"title"`
 	Thumb        string    `gorm:"column:thumb" json:"thumb"`
 	Primary      string    `gorm:"column:primary" json:"primary"`
