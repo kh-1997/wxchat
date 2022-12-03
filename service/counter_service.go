@@ -107,12 +107,12 @@ func getCounter(r *http.Request,maps map[string]string) ([]model.CounterModel, e
 // modifyCounter 更新计数，自增或者清零
 func getRemark(r *http.Request,maps map[string]string) (model.GoodModel, error) {
 	action := maps["action"]
-	order := maps["order"]
-	log.Printf("action = %s,order=%s",action,order)
+	trade := maps["trade"]
+	log.Printf("action = %s,trade=%s",action,trade)
 	var count model.GoodModel
 	var err error
 	if action == "remark" {
-		count, err = getRemarkByID(order)
+		count, err = getRemarkByID(trade)
 		if err != nil {
 			return count, err
 		}
