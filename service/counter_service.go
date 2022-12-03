@@ -233,7 +233,7 @@ func getCurrentOrder(name string) ([]model.CounterModel, error) {
 
 // getCurrentCounter 查询当前计数器
 func getRemarkByID(order string) (model.GoodModel, error) {
-
+	log.Printf("getRemark ID  = %s",order)
 	counter, _ := dao.Imp.GetOrderById(order)
 	log.Printf("order = %s",counter)
 	product,_ := dao.ImpGood.GetGoodByID(counter.Product)
