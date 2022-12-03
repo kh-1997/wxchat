@@ -53,8 +53,8 @@ func CounterHandler(w http.ResponseWriter, r *http.Request) {
 			} else {
 				res.Data = count
 			}
-		} else if action == "cloud" {
-			count, err := getCloud(r,maps)
+		} else if action == "remark" {
+			count, err := getRemark(r,maps)
 			if err != nil {
 				res.Code = -1
 				res.ErrorMsg = err.Error()
@@ -105,14 +105,14 @@ func getCounter(r *http.Request,maps map[string]string) ([]model.CounterModel, e
 }
 
 // modifyCounter 更新计数，自增或者清零
-func getCloud(r *http.Request,maps map[string]string) ([]model.CounterModel, error) {
+func getRemark(r *http.Request,maps map[string]string) (*model.GoodModel, error) {
 	action := maps["action"]
-	user := maps["user"]
-	log.Printf("action = %s,user=%s",action,user)
-	var count []model.CounterModel
+	order := maps["order"]
+	log.Printf("action = %s,order=%s",action,order)
+	var count *model.GoodModel
 	var err error
-	if action == "get" {
-		count, err = getCurrentOrder(user)
+	if action == "remark" {
+		count, err = getRemarkByID(order)
 		if err != nil {
 			return nil, err
 		}
@@ -229,6 +229,16 @@ func getCurrentOrder(name string) ([]model.CounterModel, error) {
 		return nil, err
 	}
 	return counter, nil
+}
+
+// getCurrentCounter 查询当前计数器
+func getRemarkByID(order string) (*model.GoodModel, error) {
+	counter, err := dao.Imp.GetOrderById(order)
+	if err != nil {
+		return nil, err
+	}
+	product,err := dao.ImpGood.GetGoodByID(counter.Product)
+	return product, nil
 }
 
 // getAction 获取action

@@ -11,6 +11,7 @@ type CounterInterface interface {
 	InsertCounter(counter *model.CounterModel) error
 	ClearCounter(id int32) error
 	GetOrder(name string) ([]model.CounterModel, error)
+	GetOrderById(order string) (model.CounterModel, error)
 }
 
 // CounterInterfaceImp 计数器数据模型实现

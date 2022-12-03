@@ -46,3 +46,14 @@ func (imp *CounterInterfaceImp) GetOrder(name string) ([]model.CounterModel, err
 
 	return counter, err
 }
+
+// GetCounter 查询Counter
+func (imp *CounterInterfaceImp) GetOrderById(order string) (model.CounterModel, error) {
+	var err error
+	var counter []model.CounterModel
+
+	cli := db.Get()
+	err = cli.Table(tableName).Where("order = ?", order).Find(&counter).Error
+
+	return counter[0], err
+}
