@@ -182,7 +182,7 @@ func upsertCounter(r *http.Request) (int32, error) {
 // upsertCounter 更新或修改计数器
 func addCounter(r *http.Request,maps map[string]string) (int32, error) {
 	product := maps["product"]
-	order := maps["order"]
+	trade := maps["trade"]
 	user := maps["user"]
 	price := maps["price"]
 	primary := maps["primary"]
@@ -194,7 +194,7 @@ func addCounter(r *http.Request,maps map[string]string) (int32, error) {
 		CreatedAt: time.Now(),
 		UpdatedAt: time.Now(),
 		Product: product,
-		Order: order,
+		Trade: trade,
 		User: user,
 		Price: int(prices),
 		Primary: primary,
