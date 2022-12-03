@@ -201,7 +201,7 @@ func addCounter(r *http.Request,maps map[string]string) (int32, error) {
 		Thumb: thumb,
 		Title: title,
 	}
-	log.Printf("maps = %s",counter)
+	log.Printf("map = %s",counter)
 	err := dao.Imp.InsertCounter(counter)
 	log.Printf("InsertCounter err = %s",err)
 	return counter.Count, nil
