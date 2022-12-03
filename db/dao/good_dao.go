@@ -18,12 +18,12 @@ func (imp *GoodInterfaceImp) GetGoodByName(name string) (*model.GoodModel, error
 	return counter, err
 }
 
-func (imp *GoodInterfaceImp) GetGoodByID(spu string) (*model.GoodModel, error) {
+func (imp *GoodInterfaceImp) GetGoodByID(spu string) (model.GoodModel, error) {
 	var err error
-	var counter = new(model.GoodModel)
+	var counter = model.GoodModel{}
 
 	cli := db.Get()
-	err = cli.Table(tableGoodName).Where("spu = ?", spu).First(counter).Error
+	err = cli.Table(tableGoodName).Where("spu = ?", spu).First(&counter).Error
 
 	return counter, err
 }

@@ -8,7 +8,7 @@ import (
 type GoodInterface interface {
 	GetGoodByName(name string) (*model.GoodModel, error)
 	GetAllGood() ([]model.GoodModel, error)
-    GetGoodByID(spu string) (*model.GoodModel, error)
+    GetGoodByID(spu string) (model.GoodModel, error)
 }
 
 // CounterInterfaceImp 计数器数据模型实现
