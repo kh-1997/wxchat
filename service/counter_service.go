@@ -105,16 +105,16 @@ func getCounter(r *http.Request,maps map[string]string) ([]model.CounterModel, e
 }
 
 // modifyCounter 更新计数，自增或者清零
-func getRemark(r *http.Request,maps map[string]string) (*model.GoodModel, error) {
+func getRemark(r *http.Request,maps map[string]string) (model.GoodModel, error) {
 	action := maps["action"]
 	order := maps["order"]
 	log.Printf("action = %s,order=%s",action,order)
-	var count *model.GoodModel
+	var count model.GoodModel
 	var err error
 	if action == "remark" {
 		count, err = getRemarkByID(order)
 		if err != nil {
-			return nil, err
+			return count, err
 		}
 	} else {
 		err = fmt.Errorf("参数 action : %s 错误", action)
@@ -237,7 +237,12 @@ func getRemarkByID(order string) (*model.GoodModel, error) {
 	if err != nil {
 		return nil, err
 	}
+	log.Printf("order = %s",counter)
 	product,err := dao.ImpGood.GetGoodByID(counter.Product)
+	if err != nil {
+		return nil, err
+	}
+	log.Printf("product = %s",product)
 	return product, nil
 }
 
