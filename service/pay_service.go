@@ -15,7 +15,7 @@ func PayHandler(w http.ResponseWriter, r *http.Request) {
 	if r.Method == http.MethodGet {
 
 	} else if r.Method == http.MethodPost {
-
+		log.Print(r.Header)
 		open_id := r.Header["x-wx-openid"]
 		maps := make(map[string]interface{})
 		maps["openid"] = open_id
@@ -28,7 +28,7 @@ func PayHandler(w http.ResponseWriter, r *http.Request) {
 		container := make(map[string]interface{})
 		container["service"] = "pay"
 		container["path"] = "/api"
-		maps["container"] = container
+		//maps["container"] = container
 		reqParam, err := json.Marshal(maps)
 		reqBody := strings.NewReader(string(reqParam))
 		log.Print(reqBody)
