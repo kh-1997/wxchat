@@ -28,7 +28,7 @@ func PayHandler(w http.ResponseWriter, r *http.Request) {
 		container := make(map[string]interface{})
 		container["service"] = "pay"
 		container["path"] = "/api"
-		//maps["container"] = container
+		maps["container"] = container
 		reqParam, err := json.Marshal(maps)
 		reqBody := strings.NewReader(string(reqParam))
 		log.Print(reqBody)
