@@ -16,7 +16,7 @@ func PayHandler(w http.ResponseWriter, r *http.Request) {
 
 	} else if r.Method == http.MethodPost {
 		log.Print(r.Header)
-		open_id := r.Header["X-Wx-Openid"]
+		open_id := r.Header["X-Wx-Openid"][0]
 		maps := make(map[string]interface{})
 		maps["openid"] = open_id
 		maps["out_trade_no"] = "2021WERUN1647840687637"
@@ -34,6 +34,7 @@ func PayHandler(w http.ResponseWriter, r *http.Request) {
 		log.Print(reqBody)
 		resp, err := http.Post("http://api.weixin.qq.com/_/pay/unifiedorder", "application/json", reqBody)
 		if err != nil {
+			log.Println(err)
 			panic(err)
 		}
 		log.Print(resp)
