@@ -19,7 +19,7 @@ func PayHandler(w http.ResponseWriter, r *http.Request) {
 		open_id := r.Header["X-Wx-Openid"][0]
 		maps := make(map[string]interface{})
 		maps["openid"] = open_id
-		maps["out_trade_no"] = "2021WERUN1647840687637"
+		maps["out_trade_no"] = "2021WERUN1647840687630"
 		maps["spbill_create_ip"] = getIPV4()
 		maps["env_id"] = "prod-2gej9ar9791db14a"
 		maps["sub_mch_id"] = "1635092677"
