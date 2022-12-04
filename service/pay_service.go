@@ -24,6 +24,7 @@ func PayHandler(w http.ResponseWriter, r *http.Request) {
 		maps["env_id"] = "prod-2gej9ar9791db14a"
 		maps["sub_mch_id"] = "1635092677"
 		maps["total_fee"] = 1
+		maps["body"] = "微信支付测试"
 		maps["callback_type"] = 2
 		container := make(map[string]interface{})
 		container["service"] = "pay"
