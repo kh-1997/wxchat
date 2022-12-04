@@ -29,9 +29,9 @@ func PayHandler(w http.ResponseWriter, r *http.Request) {
 		container["service"] = "pay"
 		container["path"] = "/api"
 		maps["container"] = container
-		maps["callback_type"] = "2021WERUN1647840687637"
 		reqParam, err := json.Marshal(maps)
 		reqBody := strings.NewReader(string(reqParam))
+		log.Print(reqBody)
 		resp, err := http.Post("http://api.weixin.qq.com/_/pay/unifiedorder", "application/json", reqBody)
 		if err != nil {
 			panic(err)
