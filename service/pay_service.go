@@ -6,6 +6,7 @@ import (
 	"io/ioutil"
 	"log"
 	"net/http"
+	"strconv"
 	"strings"
 )
 
@@ -22,7 +23,11 @@ func PayHandler(w http.ResponseWriter, r *http.Request) {
 		}
 		defer r.Body.Close()
 		out_trade_no, _ := body2["out_trade_no"].(string)
-		total_fee, _ := body2["total_fee"].(int64)
+		total_fee, _ := body2["total_fee"].(string)
+		fee, err := strconv.ParseInt(total_fee,10,64)
+		if err != nil{
+			fmt.Println(err)
+		}
 		pay_body, _ := body2["pay_body"].(string)
 		log.Print(r.Header)
 		open_id := r.Header["X-Wx-Openid"][0]
@@ -32,7 +37,7 @@ func PayHandler(w http.ResponseWriter, r *http.Request) {
 		maps["spbill_create_ip"] = getIPV4()
 		maps["env_id"] = "prod-2gej9ar9791db14a"
 		maps["sub_mch_id"] = "1635092677"
-		maps["total_fee"] = total_fee
+		maps["total_fee"] = fee
 		maps["body"] = pay_body
 		maps["callback_type"] = 2
 		container := make(map[string]interface{})
