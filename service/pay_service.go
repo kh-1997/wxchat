@@ -8,6 +8,8 @@ import (
 	"net/http"
 	"strconv"
 	"strings"
+
+	"wxcloudrun-golang/db/model"
 )
 
 func PayHandler(w http.ResponseWriter, r *http.Request) {
@@ -57,8 +59,14 @@ func PayHandler(w http.ResponseWriter, r *http.Request) {
 		if err != nil {
 			panic(err)
 		}
-		fmt.Println(string(body))
-
+		payInfo := model.PayInfo{}
+		err = json.Unmarshal(body, &payInfo)
+		if err != nil {
+			res.Code = -1
+			res.ErrorMsg = err.Error()
+		} else {
+			res.Data = payInfo
+		}
 		msg, err := json.Marshal(res)
 		if err != nil {
 			fmt.Fprint(w, "内部错误")
