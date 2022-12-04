@@ -21,9 +21,9 @@ func PayHandler(w http.ResponseWriter, r *http.Request) {
 			return
 		}
 		defer r.Body.Close()
-		out_trade_no, _ := body2["out_trade_no"]
-		total_fee, _ := body2["total_fee"]
-		pay_body, _ := body2["pay_body"]
+		out_trade_no, _ := body2["out_trade_no"].(string)
+		total_fee, _ := body2["total_fee"].(int64)
+		pay_body, _ := body2["pay_body"].(string)
 		log.Print(r.Header)
 		open_id := r.Header["X-Wx-Openid"][0]
 		maps := make(map[string]interface{})
