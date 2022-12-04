@@ -16,7 +16,7 @@ func PayHandler(w http.ResponseWriter, r *http.Request) {
 
 	} else if r.Method == http.MethodPost {
 		log.Print(r.Header)
-		open_id := r.Header["x-wx-openid"]
+		open_id := r.Header["X-Wx-Openid"]
 		maps := make(map[string]interface{})
 		maps["openid"] = open_id
 		maps["out_trade_no"] = "2021WERUN1647840687637"
