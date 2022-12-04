@@ -24,6 +24,7 @@ func PayHandler(w http.ResponseWriter, r *http.Request) {
 			return
 		}
 		defer r.Body.Close()
+		fmt.Println(body2)
 		out_trade_no, _ := body2["out_trade_no"].(string)
 		total_fee, _ := body2["total_fee"].(string)
 		fmt.Println(total_fee)
