@@ -26,7 +26,11 @@ func PayHandler(w http.ResponseWriter, r *http.Request) {
 		defer r.Body.Close()
 		out_trade_no, _ := body2["out_trade_no"].(string)
 		total_fee, _ := body2["total_fee"].(string)
+		fmt.Println(total_fee)
+		fmt.Println(total_fee)
 		fee, err := strconv.ParseInt(total_fee,10,64)
+		fmt.Println(fee)
+		fmt.Println(fee)
 		if err != nil{
 			fmt.Println(err)
 		}
