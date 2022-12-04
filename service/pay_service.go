@@ -15,16 +15,25 @@ func PayHandler(w http.ResponseWriter, r *http.Request) {
 	if r.Method == http.MethodGet {
 
 	} else if r.Method == http.MethodPost {
+		decoder := json.NewDecoder(r.Body)
+		body2 := make(map[string]interface{})
+		if err := decoder.Decode(&body2); err != nil {
+			return
+		}
+		defer r.Body.Close()
+		out_trade_no, _ := body2["out_trade_no"]
+		total_fee, _ := body2["total_fee"]
+		pay_body, _ := body2["pay_body"]
 		log.Print(r.Header)
 		open_id := r.Header["X-Wx-Openid"][0]
 		maps := make(map[string]interface{})
 		maps["openid"] = open_id
-		maps["out_trade_no"] = "2021WERUN1647840687630"
+		maps["out_trade_no"] = out_trade_no
 		maps["spbill_create_ip"] = getIPV4()
 		maps["env_id"] = "prod-2gej9ar9791db14a"
 		maps["sub_mch_id"] = "1635092677"
-		maps["total_fee"] = 1
-		maps["body"] = "微信支付测试"
+		maps["total_fee"] = total_fee
+		maps["body"] = pay_body
 		maps["callback_type"] = 2
 		container := make(map[string]interface{})
 		container["service"] = "pay"
@@ -39,7 +48,6 @@ func PayHandler(w http.ResponseWriter, r *http.Request) {
 			panic(err)
 		}
 		log.Print(resp)
-		defer resp.Body.Close()
 		body, err := ioutil.ReadAll(resp.Body)
 		if err != nil {
 			panic(err)
